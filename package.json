@@ -1,0 +1,28 @@
+{
+  "name": "@digidem/react-native-geolocation",
+  "version": "1.0.0",
+  "main": "GeoLocation.js",
+  "scripts": {
+    "start": "REACT_DEBUGGER=\"open -g 'rndebugger://set-debugger-loc?port=8081' ||\" node node_modules/react-native/local-cli/cli.js start",
+    "android": "react-native run-android",
+    "test": "jest",
+    "build": ""
+  },
+  "peerDependencies": {
+    "react": "16.4.1",
+    "react-native": "0.56.0",
+    "react-native-gps-state": "github:gmaclennan/react-native-gps-state#dev"
+  },
+  "devDependencies": {
+    "react": "16.4.1",
+    "react-native": "0.56.0",
+    "react-native-gps-state": "github:gmaclennan/react-native-gps-state#dev",
+    "babel-jest": "23.2.0",
+    "babel-preset-react-native": "^5",
+    "jest": "23.3.0",
+    "react-test-renderer": "16.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
