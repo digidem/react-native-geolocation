@@ -30,11 +30,51 @@ const statusCodes = {
   HIGH_ACCURACY: 3
 }
 
+/**
+ * Create a new geolocation instance
+ *
+ * @example
+ * const loc = new GeoLocation()
+ *
+ * @param {Object} options [not yet implemented]
+ * @class GeoLocation
+ */
 class GeoLocation {
-  constructor () {
+  constructor (options) {
     this.started = false
   }
 
+
+  /**
+   * Request permissions and start observing the location.
+   *
+   * `Position.status` is an `unsigned short` representing the status:
+   *
+   * | Value | Associated Constant | Description |
+   * | ----- | ------------------- | ------------|
+   * | `1`   | `GeoLocation.SEARCHING` | GPS is searching for a location fix |
+   * | `2`   | `GeoLocation.LOW_ACCURACY` | Low accuracy position, continuing to search for better accuracy |
+   * | `3`   | `GeoLocation.HIGH_ACCURACY` | High accuracy position, will only update if use moves |
+   *
+   * `PositionError.code` is an `unsigned short` representing the error:
+   *
+   * | Value | Associated Constant | Description |
+   * | ----- | ------------------- | ------------|
+   * | `1`   | `GeoLocation.PERMISSION_DENIED` | Location acquisition failed because the app does not have permission |
+   * | `2`   | `GeoLocation.POSITION_UNAVAILABLE` | Location acquisition failed because location services are turned off or unavailable |
+   * | `3`   | `GeoLocation.TIMEOUT` | Timeout was reached before a location was found |
+   * | `4`   | `GeoLocation.UNKNOWN` | Unknown error occured trying to acquire location |
+   *
+   * @param {function} onLocation Called with every location update, *including*
+   * when searching for a location, but no position is available. Returns a
+   * [Position](https://developer.mozilla.org/en-US/docs/Web/API/Position)
+   * object with an additional property `status` (see above)
+   * @param {function} onError Called every time there is an error (failed to
+   * get position) with a
+   * [PositionError](https://developer.mozilla.org/en-US/docs/Web/API/PositionError)
+   * object with an additional `PositionError.code` (see above)
+   * @memberof GeoLocation
+   */
   async startObserving (onLocation, onError) {
     if (this.started) throw Error('Called startObserving more than once')
 
@@ -94,6 +134,11 @@ class GeoLocation {
     }
   }
 
+  /**
+   * Stop observing the location
+   *
+   * @memberof GeoLocation
+   */
   stopObserving () {
     if (typeof this.watchId === 'undefined') return
     navigator.geolocation.clearWatch(this.watchId)
@@ -109,6 +154,7 @@ export default GeoLocation
  * Gets a location without highAccuracy (which include position from cell phone
  * towers and wifi). It will use a previously cached position if it is less than
  * MAX_AGE milliseconds old
+ * @private
 **/
 function getInitialPosition (success, error) {
   navigator.geolocation.getCurrentPosition(success, error, {
@@ -120,6 +166,7 @@ function getInitialPosition (success, error) {
 
 /**
  * Starts watching the location (updates every 1000ms on most phones)
+ * @private
  */
 function watchPositionUntilAccurate (success, error) {
   return navigator.geolocation.watchPosition(success, error, {
@@ -133,6 +180,7 @@ function watchPositionUntilAccurate (success, error) {
 /**
  * Once we have an accurate location we can stop updating every 1000ms and
  * instead set a distanceFilter to only update the location when the user moves
+ * @private
  */
 function watchPositionForMovement (success, error) {
   return navigator.geolocation.watchPosition(success, error, {
@@ -145,6 +193,7 @@ function watchPositionForMovement (success, error) {
 
 /**
  * Request permission to access location. Throws an error if permission is denied
+ * @private
  */
 async function requestLocationPermission () {
   let granted
