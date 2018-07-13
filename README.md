@@ -33,13 +33,15 @@ You will need to install and link the peer dependecy react-native-gps-state
 
 ```sh
 npm install -S @digidem/react-native-geolocation
-npm install -S gmaclennan/react-native-gps-state#dev
-npm link react-native-gps-state
+npm install -S @digidem/react-native-gps-state
+npm link @digidem/react-native-gps-state
 ```
 
 ## Usage
 
 ```js
+const GeoLocation = require('@digidem/react-native-geolocation')
+
 const loc = new GeoLocation()
 loc.startObserving(
   (position) => console.log(position),
