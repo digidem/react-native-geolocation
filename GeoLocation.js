@@ -1,5 +1,5 @@
 import { PermissionsAndroid } from 'react-native'
-import GPSState from 'react-native-gps-state'
+import GPSState from '@digidem/react-native-gps-state'
 
 // Timeout waiting for a GPS position
 const TIMEOUT = 10 * 60 * 1000 // 10 minutes
