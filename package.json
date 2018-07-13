@@ -1,6 +1,6 @@
 {
   "name": "@digidem/react-native-geolocation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "GeoLocation.js",
   "scripts": {
     "start": "REACT_DEBUGGER=\"open -g 'rndebugger://set-debugger-loc?port=8081' ||\" node node_modules/react-native/local-cli/cli.js start",
