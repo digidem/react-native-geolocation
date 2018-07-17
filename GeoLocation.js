@@ -20,7 +20,7 @@ const errorCodes = {
 const errorMessages = {
   PERMISSION_DENIED: 'Location permission denied by user',
   POSITION_UNAVAILABLE: 'Location services are turned off',
-  TIMEOUT: 'Location serach timed out',
+  TIMEOUT: 'Location search timed out',
   UNKNOWN: 'Unknown error'
 }
 
@@ -109,18 +109,7 @@ class GeoLocation {
     getInitialPosition(onUpdate, onError)
 
     // At the same time start search for high accuracy location
-    this.watchId = watchPositionUntilAccurate(
-      (position) => {
-        // Keep searching for location until accuracy is better
-        if (position.coords.accuracy <= MAX_ACCURACY) {
-          navigator.geolocation.clearWatch(this.watchId)
-          // Only update the location if the user moves
-          this.watchId = watchPositionForMovement(onUpdate, onError)
-        }
-        onUpdate(position)
-      },
-      onError
-    )
+    this.watchId = watchPositionUntilAccurate(onUpdate, onError)
 
     function onUpdate (position) {
       if (!position) {
@@ -172,7 +161,7 @@ function watchPositionUntilAccurate (success, error) {
   return navigator.geolocation.watchPosition(success, error, {
     enableHighAccuracy: true,
     timeout: TIMEOUT,
-    maximumAge: 0,
+    maximumAge: 2000,
     distanceFilter: 0
   })
 }
@@ -202,13 +191,10 @@ async function requestLocationPermission () {
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
     ])
-    console.log('granted', granted)
   } catch (err) {
-    console.log('error', err)
     throw createError(err.message, errorCodes.UNKNOWN)
   }
   if (granted[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION] !== 'granted') {
-    console.log('granted', granted[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION])
     throw createError(errorMessages.PERMISSION_DENIED, errorCodes.PERMISSION_DENIED)
   }
 }
